@@ -1,2 +1,1 @@
-# clever-users
-Users package for CLEVER.
+README: users
