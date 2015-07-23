@@ -250,25 +250,26 @@ UserSchema.statics = {
   createUser: function(userParams) {
     const User = mongoose.model('User');
     const roles = ['authenticated'];
+    const user = new User(userParams);
+    const defer = Q.defer();
 
     if(userParams.admin === '1') {
       delete userParams.admin;
       roles.push('admin');
     }
 
-    const user = new User(userParams);
-    user.provider = 'local';
-
-    // TODO: User permission
-    // TODO: if no user in the database, register it as admin
-    user.roles = roles;
-
-    const defer = Q.defer();
-    user.save(function(err) {
-      const errors = hasErrors(err);
-      if(errors) return defer.reject(errors);
-      defer.resolve(user);
-    });
+    User.countUsers()
+      .then(function(nUsers) {
+        if(nUsers === 0) roles.push('admin');
+        user.provider = 'local';
+        user.roles = roles;
+        user.save(function(err) {
+          const errors = hasErrors(err);
+          if(errors) return defer.reject(errors);
+          defer.resolve(user);
+        });
+      })
+      .catch(defer.reject)
 
     return defer.promise;
   }
