@@ -41,5 +41,5 @@
     "mocha": "^2.2.5",
     "chai": "^2.1.2"
   },
-  "license": "MIT",
+  "license": "MIT"
 }
