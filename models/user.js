@@ -153,7 +153,7 @@ UserSchema.statics = {
    */
   getUsers: function(skip, limit) {
     const User = mongoose.model('User');
-    const options = skip && limit ? {skip: skip, limit: limit} : {};
+    const options = skip && limit ? {skip: skip, limit: limit} : {skip: 0, limit: 10};
     const defer = Q.defer();
     User.find({}, {}, options, function(err, users) {
       if (err) return defer.reject(err);
